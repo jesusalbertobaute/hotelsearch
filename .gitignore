@@ -1,0 +1,126 @@
+########################################
+# Java
+########################################
+*.class
+*.jar
+*.war
+*.ear
+*.log
+hs_err_pid*
+
+########################################
+# Maven
+########################################
+*/target/
+*/pom.xml.tag
+*/pom.xml.releaseBackup
+*/pom.xml.versionsBackup
+*/pom.xml.next
+*/release.properties
+*/dependency-reduced-pom.xml
+*/.mvn/timing.properties
+*/.mvn/wrapper/maven-wrapper.jar
+
+########################################
+# Spring Boot
+########################################
+*/logs/
+*/out/
+*/build/
+*.pid
+*.pid.lock
+application-*.yml
+application-*.properties
+
+########################################
+# Eclipse
+########################################
+*.project
+*.classpath
+*.settings/
+*.factorypath
+*.springBeans
+*.sts4-cache/
+*.c9/
+*.launch
+*.sublime-workspace
+
+########################################
+# IntelliJ IDEA
+########################################
+.idea/
+*.iws
+*.iml
+*.ipr
+*out/
+
+########################################
+# OS
+########################################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+########################################
+# Docker
+########################################
+.env
+*.env
+docker-compose.override.yml
+
+########################################
+# Test / Coverage
+########################################
+/coverage/
+/jacoco.exec
+/.scannerwork/
+
+########################################
+# Secrets / Credentials
+########################################
+*.key
+*.pem
+*.crt
+*.jks
+*.p12
+*db_user.txt
+*db_passwd.txt
+
+########################################
+# Temporary files
+########################################
+*.tmp
+*.swp
+*~
+
+# Compiled output
+*/dist
+*/tmp
+*/out-tsc
+*/bazel-out
+
+# Node
+*/node_modules
+*npm-debug.log
+*yarn-error.log
+
+
+# Visual Studio Code
+*.vscode/*
+*/.vscode/*
+*!.vscode/settings.json
+*!.vscode/tasks.json
+*!.vscode/launch.json
+*!.vscode/extensions.json
+*.history/*
+*/.editorconfig
+
+# Miscellaneous
+*/.angular/cache
+*.sass-cache/
+*/connect.lock
+*/coverage
+*/libpeerconnection.log
+*testem.log
+*/typings
+*__screenshots__/
