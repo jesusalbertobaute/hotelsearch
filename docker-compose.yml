@@ -1,0 +1,78 @@
+services:
+  oracle-db:
+    image: gvenzl/oracle-free:slim
+    container_name: oracle-db
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD_FILE: /run/secrets/oracle_password
+      APP_USER: hotelapp
+      APP_USER_PASSWORD_FILE: /run/secrets/oracle_user_password
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    secrets:
+      - oracle_password
+      - oracle_user_password
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      
+  kafka:
+    image: apache/kafka:4.2.0
+    container_name: kafka
+    hostname: kafka
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://:29092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+  
+  kafka-init:
+    image: apache/kafka:4.2.0
+    depends_on:
+      - kafka
+    entrypoint:
+      - sh
+      - -c
+      - |
+        echo "Esperando a que Kafka esté disponible..."
+        until /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server kafka:9092 >/dev/null 2>&1; do
+          echo "Kafka aún no está listo..."
+          sleep 3
+        done
+        echo "Kafka listo. Creando topic..."
+        echo "Creando topics..."
+        /opt/kafka/bin/kafka-topics.sh \
+          --bootstrap-server kafka:9092 \
+          --create \
+          --if-not-exists \
+          --topic hotel_availability_searches \
+          --partitions 2 \
+          --replication-factor 1
+        echo "Topics creados"
+
+volumes:
+  kafka-data:
+  oracle-data:
+
+secrets:
+  oracle_password:
+    file: ./secrets/oracle_password.txt
+  oracle_user_password:
+    file: ./secrets/oracle_user_password.txt

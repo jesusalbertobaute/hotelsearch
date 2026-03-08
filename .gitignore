@@ -71,9 +71,9 @@ docker-compose.override.yml
 ########################################
 # Test / Coverage
 ########################################
-/coverage/
-/jacoco.exec
-/.scannerwork/
+*/coverage/
+*/jacoco.exec
+*/.scannerwork/
 
 ########################################
 # Secrets / Credentials
@@ -83,8 +83,7 @@ docker-compose.override.yml
 *.crt
 *.jks
 *.p12
-*db_user.txt
-*db_passwd.txt
+/secrets/
 
 ########################################
 # Temporary files
