@@ -4,15 +4,18 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.mindata.hotelsearch.application.annotation.UseCase;
-import com.mindata.hotelsearch.application.port.input.SaveSearchPort;
+import com.mindata.hotelsearch.application.port.input.SaveSearchInputPort;
+import com.mindata.hotelsearch.application.port.output.SaveSearchOutputPort;
 import com.mindata.hotelsearch.domain.model.Search;
 import com.mindata.hotelsearch.domain.model.SearchDetails;
 
 @UseCase
-public class SaveSearchUseCase implements SaveSearchPort{
+public class SaveSearchUseCase implements SaveSearchInputPort{
+	
+	private final SaveSearchOutputPort saveSearch;
 
-	public SaveSearchUseCase() {
-		
+	public SaveSearchUseCase(SaveSearchOutputPort saveSearch) {
+		this.saveSearch = saveSearch;
 	}
 
 	@Override
@@ -24,6 +27,8 @@ public class SaveSearchUseCase implements SaveSearchPort{
 		SearchDetails searchDetails = new SearchDetails(hotelId,checkIn,checkOut,ages);
 		
 		Search searchCreated = Search.create(searchDetails);
+		
+		this.saveSearch.save(searchCreated);
 		
 		return searchCreated.getSearchId();
 	}

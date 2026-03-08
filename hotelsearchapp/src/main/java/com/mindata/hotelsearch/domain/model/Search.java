@@ -7,15 +7,16 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mindata.hotelsearch.domain.exception.DomainException;
 
 import jakarta.xml.bind.DatatypeConverter;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@Getter
 public final class Search {
+    private static final Logger log = LoggerFactory.getLogger(Search.class);
+    
 	private final String searchId;
     private final SearchDetails searchData;
     private final long count;
@@ -67,6 +68,17 @@ public final class Search {
          	throw new DomainException("Failed to generate searchId");
          }
     }
-   
+
+	public String getSearchId() {
+		return searchId;
+	}
+
+	public SearchDetails getSearchData() {
+		return searchData;
+	}
+
+	public long getCount() {
+		return count;
+	}
 
 }

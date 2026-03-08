@@ -16,17 +16,17 @@ public interface OutboxEventRepository extends JpaRepository<OutboxEventEntity, 
 	@Query(value = """
 		    SELECT event_id
 		    FROM outbox_event
-		    WHERE published = 0 AND processing = 0
-		    ORDER BY create_at
-		    FETCH FIRST :batchSize ROWS ONLY
-            FOR UPDATE SKIP LOCKED
+		    WHERE published = 0
+		      AND processing = 0
+		      AND ROWNUM <= :batchSize
+		    FOR UPDATE SKIP LOCKED
 		""", nativeQuery = true)
 	List<String> fetchNextBatchIds(@Param("batchSize") int batchSize);
 	
 	@Transactional
 	@Modifying
 	@Query("""
-	    UPDATE OutboxEvent e
+	    UPDATE OutboxEventEntity e
 	    SET e.processing = true
 	    WHERE e.eventId IN :ids
 	""")

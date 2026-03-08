@@ -2,6 +2,6 @@ package com.mindata.hotelsearch.application.port.output;
 
 import com.mindata.hotelsearch.domain.model.Search;
 
-public interface SaveSearchPort {
+public interface SaveSearchOutputPort {
 	void save(Search searchModel);
 }
