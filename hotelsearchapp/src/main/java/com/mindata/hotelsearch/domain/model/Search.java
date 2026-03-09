@@ -28,6 +28,9 @@ public final class Search {
     }
     
     private Search(String searchId, SearchDetails searchData,long count) {
+    	if (count < 0L) {
+    		throw new DomainException("count can not be less than 0");
+    	}
         this.searchId = searchId;
         this.searchData = searchData;
         this.count = count;
@@ -39,6 +42,10 @@ public final class Search {
 	        	  searchData.checkOut(),
 	        	  searchData.ages());
 	     return new Search(generatedId, searchData);
+    }
+    
+    public static Search create(String searchId,SearchDetails searchData) {
+	     return new Search(searchId, searchData);
     }
     
     public static Search create(SearchDetails searchData,long count) {
