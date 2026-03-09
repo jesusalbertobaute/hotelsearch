@@ -55,5 +55,9 @@ public class OutBoxSaveProxy {
     public void fallbackSaveSearch(SearchEvent searchEvent, Throwable ex) {
         log.error("Fallback triggered for event {}", searchEvent.eventId(), ex);
     }
+    
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
 
 }
