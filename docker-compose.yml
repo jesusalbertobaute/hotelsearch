@@ -15,9 +15,12 @@ services:
       - oracle_user_password
     healthcheck:
       test: ["CMD", "healthcheck.sh"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+    networks:
+      - app-network
       
   kafka:
     image: apache/kafka:4.2.0
@@ -34,12 +37,15 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_LISTENERS: CONTROLLER://kafka:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LOG_DIRS: /var/lib/kafka/data
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    networks:
+      - app-network
     volumes:
       - kafka-data:/var/lib/kafka/data
   
@@ -47,6 +53,8 @@ services:
     image: apache/kafka:4.2.0
     depends_on:
       - kafka
+    networks:
+      - app-network
     entrypoint:
       - sh
       - -c
@@ -66,6 +74,30 @@ services:
           --partitions 2 \
           --replication-factor 1
         echo "Topics creados"
+  
+  hotelsearchapp:
+    build:
+      context: ./hotelsearchapp
+    container_name: hotelsearchapp
+    environment:
+      SPRING_KAFKA_HOST: kafka
+      SPRING_KAFKA_PORT: 9092
+      SPRING_ORACLESQL_HOST: oracle-db
+      SPRING_ORACLESQL_PORT: 1521
+    depends_on:
+      kafka:
+        condition: service_started
+      kafka-init:
+        condition: service_completed_successfully
+      oracle-db:
+        condition: service_healthy
+    secrets:
+      - oracle_password
+      - oracle_user_password
+    networks:
+      - app-network
+    ports:
+      - 8080:8080
 
 volumes:
   kafka-data:
@@ -76,3 +108,7 @@ secrets:
     file: ./secrets/oracle_password.txt
   oracle_user_password:
     file: ./secrets/oracle_user_password.txt
+
+networks:
+  app-network:
+    driver: bridge
