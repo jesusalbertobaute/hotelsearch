@@ -3,13 +3,18 @@ package com.mindata.hotelsearch.infrastructure.adapter.output.persistence.entity
 import java.time.LocalDate;
 import java.util.List;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "RESERVATION_SEARCH")
 public class ReservationSearchEntity {
+	@Id
 	@Column(name = "SEARCH_ID")
 	private String searchId;
 
@@ -22,6 +27,7 @@ public class ReservationSearchEntity {
 	@Column(name = "CHECK_OUT")
 	private LocalDate checkOut;
 
+	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(name = "AGES")
 	private List<Integer> ages;
 

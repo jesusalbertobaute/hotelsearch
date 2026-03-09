@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class SearchKafkaProducer {
 	
 	public SearchKafkaProducer(OutboxEventRepository outboxRepository, 
 			KafkaPublisherProxy kafkaPublisher,
-			ExecutorService outboxExecutor, ObjectMapper objectMapper) {
+			@Qualifier("outboxExecutor") ExecutorService outboxExecutor, ObjectMapper objectMapper) {
 		this.outboxRepository = outboxRepository;
 		this.kafkaPublisher = kafkaPublisher;
 		this.outboxExecutor = outboxExecutor;
@@ -54,7 +55,7 @@ public class SearchKafkaProducer {
                 .map(eventEntity -> CompletableFuture.runAsync(() -> {
                     try {
                         SearchEvent searchEvent = objectMapper.readValue(eventEntity.getPayload(), SearchEvent.class);
-                        kafkaPublisher.publishEvent(searchEvent);
+                        this.kafkaPublisher.publishEvent(searchEvent);
 
                         eventEntity.setPublished(true);
                         eventEntity.setProcessing(false);
@@ -73,10 +74,10 @@ public class SearchKafkaProducer {
 	
 	@Transactional
     protected List<String> fetchAndMarkBatch() {
-        List<String> batchIds = outboxRepository.fetchNextBatchIds(BATCH_SIZE);
+        List<String> batchIds = this.outboxRepository.fetchNextBatchIds(BATCH_SIZE);
         if (!batchIds.isEmpty()) {
-            outboxRepository.markBatchAsProcessing(batchIds);
-            log.debug("Marked {} outbox events as processing", batchIds.size());
+            this.outboxRepository.markBatchAsProcessing(batchIds);
+            log.info("Marked {} outbox events as processing", batchIds.size());
         }
         return batchIds;
     }

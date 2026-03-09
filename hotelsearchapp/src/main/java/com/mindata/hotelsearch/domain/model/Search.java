@@ -4,6 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +50,10 @@ public final class Search {
 	     return new Search(searchId, searchData);
     }
     
+    public static Search create(String searchId,SearchDetails searchData,long count) {
+	     return new Search(searchId, searchData,count);
+    }
+    
     public static Search create(SearchDetails searchData,long count) {
 	     String generatedId = generateId(searchData.hotelId(),
 	    		  searchData.checkIn(),
@@ -65,11 +71,16 @@ public final class Search {
 	    	
 	    	String agesString = ages.stream()
 	    			.map(String::valueOf)
-	    			.sorted()
 	    			.collect(Collectors.joining(","));
-	    	String hashString = String.format("%s|%s|%s|%s", hotelId, checkIn, checkOut, agesString);
+	    	
+	    	DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+	    	
+	    	String hashString = String.format("%s|%s|%s|%s", hotelId, checkIn.format(formatter), 
+	    			checkOut.format(formatter), agesString);
 	    	byte[] hashBytes = digest.digest(hashString.getBytes(StandardCharsets.UTF_8));
-	    	return DatatypeConverter.printHexBinary(hashBytes);
+	    	return Base64.getUrlEncoder()
+	                .withoutPadding()
+	                .encodeToString(hashBytes);
     	 }catch(NoSuchAlgorithmException exception) {
          	log.error(String.format("Failed to generate searchId: %s", exception.getMessage()));
          	throw new DomainException("Failed to generate searchId");

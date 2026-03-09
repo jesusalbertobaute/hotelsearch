@@ -16,4 +16,14 @@ public class VirtualThreadConfiguration {
     public ExecutorService outboxExecutor() {
         return Executors.newVirtualThreadPerTaskExecutor();
     }
+    
+    @Bean(destroyMethod = "shutdown")
+    public ExecutorService consumerExecutor() {
+        return Executors.newVirtualThreadPerTaskExecutor();
+    }
+    
+    @Bean(destroyMethod = "shutdown")
+    public ExecutorService reservationExecutor() {
+        return Executors.newVirtualThreadPerTaskExecutor();
+    }
 }

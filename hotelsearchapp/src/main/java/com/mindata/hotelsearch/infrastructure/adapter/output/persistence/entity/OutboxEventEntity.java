@@ -12,7 +12,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "outbox_event")
+@Table(name = "OUTBOX_EVENT")
 public class OutboxEventEntity {
 	@Id
     @Column(name = "EVENT_ID")
