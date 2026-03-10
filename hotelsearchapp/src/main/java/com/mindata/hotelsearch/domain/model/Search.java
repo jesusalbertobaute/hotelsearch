@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import com.mindata.hotelsearch.domain.exception.DomainException;
 
-import jakarta.xml.bind.DatatypeConverter;
-
 public final class Search {
     private static final Logger log = LoggerFactory.getLogger(Search.class);
     

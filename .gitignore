@@ -29,8 +29,6 @@ hs_err_pid*
 */build/
 *.pid
 *.pid.lock
-application-*.yml
-application-*.properties
 
 ########################################
 # Eclipse

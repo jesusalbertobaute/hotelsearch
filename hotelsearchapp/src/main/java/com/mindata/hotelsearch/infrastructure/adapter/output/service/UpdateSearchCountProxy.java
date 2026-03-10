@@ -37,13 +37,14 @@ public class UpdateSearchCountProxy {
 	    } catch (DataIntegrityViolationException e) {
 	        return;
 	    }
-
+          
 	    int updated = this.reservationSearchRepository.incrementCount(reservationSearchEntity.getSearchId());
-
+	    log.info("Updated Reservation"); 
 	    if (updated == 0) {
+	    	log.info("Save new Reservation");
 	    	try {
 	            this.reservationSearchRepository.save(reservationSearchEntity);
-	        } catch (DataIntegrityViolationException ignore) {
+	        } catch (DataIntegrityViolationException ex) {
 	        	log.error("The reservation search {} had been saved before",reservationSearchEntity.getSearchId());
 	        }
 	    }
