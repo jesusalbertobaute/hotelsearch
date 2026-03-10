@@ -20,9 +20,9 @@ Ejemplo:
      cd hotelsearch
     ```
 2. **Crear carpeta "secrets" con archivos de credenciales:**
-   secrets/
-       oracle_password.txt          # Password para la Base de Datos Oracle
-       oracle_user_password.txt     # Password de usuario para conexión a Oracle
+   - secrets/
+       - oracle_password.txt          # Password para la Base de Datos Oracle
+       - oracle_user_password.txt     # Password de usuario para conexión a Oracle
 
    La aplicación leer&aacute; estas credenciales para conectarse a la base de datos de forma segura.
 
