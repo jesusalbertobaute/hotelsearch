@@ -49,7 +49,7 @@ public class SearchKafkaProducer {
 	      return;
 	    }
 		
-	    List<OutboxEventEntity> batch = outboxRepository.findByEventIdIn(batchIds);
+	    List<OutboxEventEntity> batch = this.outboxRepository.findByEventIdIn(batchIds);
 	   
 	    List<CompletableFuture<Void>> futures = batch.stream()
                 .map(eventEntity -> CompletableFuture.runAsync(() -> {

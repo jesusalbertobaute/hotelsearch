@@ -39,7 +39,7 @@ public class UpdateSearchCountProxy {
 	    }
           
 	    int updated = this.reservationSearchRepository.incrementCount(reservationSearchEntity.getSearchId());
-	    log.info("Updated Reservation"); 
+	  
 	    if (updated == 0) {
 	    	log.info("Save new Reservation");
 	    	try {

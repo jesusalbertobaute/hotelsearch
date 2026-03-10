@@ -1,8 +1,5 @@
 package com.mindata.hotelsearch.infrastructure.adapter.output.service;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
 import org.slf4j.Logger;
@@ -12,13 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.mindata.hotelsearch.application.port.output.UpdateSearchCountOutputPort;
 import com.mindata.hotelsearch.domain.model.Search;
-import com.mindata.hotelsearch.infrastructure.adapter.kafka.event.SearchEvent;
-import com.mindata.hotelsearch.infrastructure.adapter.mapping.SearchOutputMapper;
-import com.mindata.hotelsearch.infrastructure.adapter.output.kafka.OutBoxSaveProxy;
-import com.mindata.hotelsearch.infrastructure.adapter.output.kafka.SearchSaveOutbox;
 import com.mindata.hotelsearch.infrastructure.adapter.output.persistence.entity.ReservationSearchEntity;
 
-import jakarta.persistence.Column;
 @Service
 public class UpdateSearchCountService implements UpdateSearchCountOutputPort {
     private static final Logger log = LoggerFactory.getLogger(UpdateSearchCountService.class);
