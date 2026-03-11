@@ -3,14 +3,13 @@ package com.mindata.hotelsearch.application.usecase;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.mindata.hotelsearch.application.annotation.UseCase;
 import com.mindata.hotelsearch.application.port.input.UpdateSearchCountInputPort;
 import com.mindata.hotelsearch.application.port.output.UpdateSearchCountOutputPort;
 import com.mindata.hotelsearch.domain.exception.DomainException;
 import com.mindata.hotelsearch.domain.model.Search;
 import com.mindata.hotelsearch.domain.model.SearchDetails;
 
-@UseCase
+
 public class UpdateSearchCountUseCase implements UpdateSearchCountInputPort {
     private final UpdateSearchCountOutputPort updateSearchCountOutput;
     

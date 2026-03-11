@@ -45,9 +45,11 @@ public class OutBoxSaveProxy {
                     .processing(false)
                     .build();
 
-            outboxRepository.save(event);
+            this.outboxRepository.save(event);
 
         } catch (Exception e) {
+        	log.error("Failed to save event in outbox table for searchId {} and eventId {} ", searchEvent.searchId(),
+					 searchEvent.eventId(), e);
             throw new PersistenceOutboxException(e.getMessage());
         }
     }

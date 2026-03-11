@@ -63,7 +63,7 @@ public class SearchKafkaProducer {
                         log.error("Failed to publish event {}", eventEntity.getEventId(), e);
                         eventEntity.setProcessing(false);
                     }
-                }, outboxExecutor))
+                }, this.outboxExecutor))
                 .toList();
 	    
 	    CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();

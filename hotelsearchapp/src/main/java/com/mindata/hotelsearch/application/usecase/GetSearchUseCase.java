@@ -3,13 +3,12 @@ package com.mindata.hotelsearch.application.usecase;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import com.mindata.hotelsearch.application.annotation.UseCase;
 import com.mindata.hotelsearch.application.port.input.GetSearchInputPort;
 import com.mindata.hotelsearch.application.port.output.GetSearchOutputPort;
 import com.mindata.hotelsearch.domain.exception.InvalidSearchIdException;
 import com.mindata.hotelsearch.domain.model.Search;
 
-@UseCase
+
 public class GetSearchUseCase implements GetSearchInputPort {
 	private final GetSearchOutputPort getSearchOutput;
 	
