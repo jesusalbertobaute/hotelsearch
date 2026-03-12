@@ -34,7 +34,7 @@ public class OutBoxSaveProxy {
     public void saveEvent(SearchEvent searchEvent) {
         try {
 
-            String payload = objectMapper.writeValueAsString(searchEvent);
+            String payload = this.objectMapper.writeValueAsString(searchEvent);
 
             OutboxEventEntity event = OutboxEventEntity.builder()
                     .eventId(searchEvent.eventId())
@@ -54,8 +54,9 @@ public class OutBoxSaveProxy {
         }
     }
 
-    public void fallbackSaveSearch(SearchEvent searchEvent, Throwable ex) {
+    public void fallbackSaveSearch(SearchEvent searchEvent, PersistenceOutboxException ex) {
         log.error("Fallback triggered for event {}", searchEvent.eventId(), ex);
+        throw new PersistenceOutboxException(ex.getMessage());
     }
     
     public void setTopic(String topic) {

@@ -2,17 +2,15 @@ package com.mindata.hotelsearch.infrastructure.adapter.output.kafka;
 
 import java.util.concurrent.ExecutionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 
 import com.mindata.hotelsearch.infrastructure.adapter.kafka.event.SearchEvent;
-
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class KafkaPublisherProxy {
@@ -26,15 +24,14 @@ public class KafkaPublisherProxy {
 		this.kafkaTemplate = kafkaTemplate;
 	}
 
-	@Retry(name = "kafkaPublisherRetry")
-    @CircuitBreaker(name = "kafkaPublisherCB", fallbackMethod = "fallbackPublish")
+	@RetryableTopic(
+		    attempts = "5",
+		    backoff = @Backoff(delay = 1000, multiplier = 2),
+		    dltTopicSuffix = "_producer_dlq",
+		    autoCreateTopics = "true"
+	)
     public void publishEvent(SearchEvent event) throws InterruptedException, ExecutionException {
-        kafkaTemplate.send(topic, event.eventId(), event).get(); 
+        this.kafkaTemplate.send(topic, event.eventId(), event).get(); 
     }
-
-    public void fallbackPublish(SearchEvent event, Throwable ex) {
-        log.error("Circuit breaker triggered for event {}. Will retry later.", event.eventId(), ex);
-    }
-
 
 }

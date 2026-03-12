@@ -87,8 +87,9 @@ class OutBoxSaveProxyTest {
     @Test
     void testFallbackSaveSearch() {
         SearchEvent searchEvent = createValidSearchEvent();
-        Throwable ex = new RuntimeException("Simulated exception");
+        PersistenceOutboxException ex = new PersistenceOutboxException("Simulated exception");
 
-        this.outBoxSaveProxy.fallbackSaveSearch(searchEvent, ex);
+        assertThrows(PersistenceOutboxException.class, () -> this.outBoxSaveProxy.fallbackSaveSearch(searchEvent, ex));
+        
     }
 }

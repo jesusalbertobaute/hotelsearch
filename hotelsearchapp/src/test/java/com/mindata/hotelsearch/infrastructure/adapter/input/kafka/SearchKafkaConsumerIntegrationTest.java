@@ -33,7 +33,7 @@ import com.mindata.hotelsearch.infrastructure.adapter.kafka.event.SearchEventDet
 @ActiveProfiles("test")
 class SearchKafkaConsumerIntegrationTest {
 
-    @Autowired
+   @Autowired
     private KafkaTemplate<String, SearchEvent> kafkaTemplate;
 
     @Autowired

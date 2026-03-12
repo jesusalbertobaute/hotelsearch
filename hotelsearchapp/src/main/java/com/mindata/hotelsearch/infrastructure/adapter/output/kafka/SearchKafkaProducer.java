@@ -81,5 +81,9 @@ public class SearchKafkaProducer {
         }
         return batchIds;
     }
+	
+	protected void setTopic(String topic) {
+		this.topic = topic;
+	}
 
 }
