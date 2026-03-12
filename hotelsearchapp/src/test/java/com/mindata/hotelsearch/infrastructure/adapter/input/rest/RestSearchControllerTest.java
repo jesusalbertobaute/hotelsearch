@@ -23,6 +23,7 @@ import com.mindata.hotelsearch.infrastructure.adapter.exception.RateLimiterExcep
 import com.mindata.hotelsearch.infrastructure.adapter.input.dto.SearchCountResponseDTO;
 import com.mindata.hotelsearch.infrastructure.adapter.input.dto.SearchDetailsResponseDTO;
 import com.mindata.hotelsearch.infrastructure.adapter.input.dto.SearchRequestDTO;
+import com.mindata.hotelsearch.infrastructure.adapter.input.dto.SearchResponseDTO;
 import com.mindata.hotelsearch.infrastructure.adapter.mapping.SearchOutputMapper;
 
 import io.github.resilience4j.ratelimiter.RateLimiter;
@@ -73,16 +74,17 @@ class RestSearchControllerTest {
 
     @Test
     void testSaveSearchReservation_success() {
-        SearchRequestDTO request = createSearchRequestDTO();
-        String expectedSearchId = createValidSearchId();
+        final SearchRequestDTO request = createSearchRequestDTO();
+        final String expectedSearchId = createValidSearchId();
+        final SearchResponseDTO expectedSearch = new SearchResponseDTO(expectedSearchId);
 
         when(saveSearchUseCase.save(request.hotelId(), request.checkIn(), request.checkOut(), request.ages()))
             .thenReturn(expectedSearchId);
 
-        var response = restSearchController.saveSearchReservation(request);
+        final var response = restSearchController.saveSearchReservation(request);
 
         assertEquals(201, response.getStatusCode().value());
-        assertEquals(expectedSearchId, response.getBody());
+        assertEquals(expectedSearch, response.getBody());
     }
 
     @Test
@@ -111,7 +113,7 @@ class RestSearchControllerTest {
         try (MockedStatic<SearchOutputMapper> mapper = org.mockito.Mockito.mockStatic(SearchOutputMapper.class)) {
             mapper.when(() -> SearchOutputMapper.toSeachCountResponseDTO(search)).thenReturn(dto);
 
-            var response = restSearchController.saveSearchReservation(searchId);
+            var response = restSearchController.getSearchReservation(searchId);
 
             assertEquals(200, response.getStatusCode().value());
             assertEquals(dto, response.getBody());
@@ -130,7 +132,7 @@ class RestSearchControllerTest {
         try (MockedStatic<SearchOutputMapper> mapper = org.mockito.Mockito.mockStatic(SearchOutputMapper.class)) {
             mapper.when(() -> SearchOutputMapper.toSeachCountResponseDTO(search)).thenReturn(dto);
 
-            var response = restSearchController.saveSearchReservation(searchId);
+            var response = restSearchController.getSearchReservation(searchId);
 
             assertEquals(404, response.getStatusCode().value());
             assertEquals(dto, response.getBody());
